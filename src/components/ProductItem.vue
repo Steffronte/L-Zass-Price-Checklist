@@ -1,8 +1,6 @@
 <template>
   <tr v-if="isLoading">
-    <td colspan="5">
-      <Spinner fill="red" height="30px" dur="1.0s" /> Chargement de {{ itemName }} en cours...
-    </td>
+    <td colspan="5"><Spinner fill="red" height="30px" dur="1.0s" /> Chargement de {{ itemName }} en cours...</td>
   </tr>
   <tr v-else-if="isError">
     <td colspan="5">
