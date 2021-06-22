@@ -1,5 +1,5 @@
 module.exports = {
   devServer: {
-    proxy: "https://warframe.market",
+    proxy: "https://api.warframe.market",
   },
 };

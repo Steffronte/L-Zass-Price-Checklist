@@ -1,4 +1,4 @@
-# l-zass-market
+# l-zass-price-checklist
 
 ## Project setup
 ```
