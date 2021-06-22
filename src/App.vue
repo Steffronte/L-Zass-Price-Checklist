@@ -5,11 +5,11 @@
   <button :class="{ isSelected: selectedList == 'relics' }" @click="selectRelic">Reliques</button>
   <button :class="{ isSelected: selectedList == 'mods' }" @click="selectMod">Mods légendaires</button>
   <button :class="{ isSelected: selectedList == 'arcane' }" @click="selectArcane">Arcanes</button>
-  <ProductList :title="'Warframes'" :names="frameNames" :totalNumber="frameNamesTotal.length" v-if="selectedList == 'warframes'" />
-  <ProductList :title="'Armes'" :names="weaponsNames" :totalNumber="weaponsNamesTotal.length" v-if="selectedList == 'weapons'" />
-  <ProductList :title="'Reliques'" :names="relicsNames" :totalNumber="relicsNamesTotal.length" v-if="selectedList == 'relics'" />
-  <ProductList :title="'Mods légendaires'" :names="modsNames" :totalNumber="modsNamesTotal.length" v-if="selectedList == 'mods'" />
-  <ProductList :title="'Arcanes'" :names="arcaneNames" :totalNumber="arcaneNamesTotal.length" v-if="selectedList == 'arcane'" />
+  <ProductList :title="'Warframes'" :names="frameNames" :totalNumber="frameNamesTotal.length" v-show="selectedList == 'warframes'" />
+  <ProductList :title="'Armes'" :names="weaponsNames" :totalNumber="weaponsNamesTotal.length" v-show="selectedList == 'weapons'" />
+  <ProductList :title="'Reliques'" :names="relicsNames" :totalNumber="relicsNamesTotal.length" v-show="selectedList == 'relics'" />
+  <ProductList :title="'Mods légendaires'" :names="modsNames" :totalNumber="modsNamesTotal.length" :imgHeight="128" :showEnglish="true" v-show="selectedList == 'mods'" />
+  <ProductList :title="'Arcanes'" :names="arcaneNames" :totalNumber="arcaneNamesTotal.length" :showEnglish="true" v-show="selectedList == 'arcane'" />
 </template>
 
 <script>
@@ -588,26 +588,31 @@ export default {
         list = list.concat(totalList.slice(list.length, Math.min(totalList.length, list.length + this.itemPerRequest)));
       }
       if (list.length < totalList.length) {
-        setTimeout(() => callback(), 1);
+        setTimeout(() => callback(), 1); //Because we need to return
       } else {
         this.isLoading = false;
       }
       return list;
     },
     requestFrame() {
-      setTimeout(() => (this.frameNames = this.addItem(this.frameNames, this.frameNamesTotal, this.requestFrame)), this.delayBetweenRequest);
+      if (this.selectedList == "warframes")
+        setTimeout(() => (this.frameNames = this.addItem(this.frameNames, this.frameNamesTotal, this.requestFrame)), this.delayBetweenRequest);
     },
     requestWeapon() {
-      setTimeout(() => (this.weaponsNames = this.addItem(this.weaponsNames, this.weaponsNamesTotal, this.requestWeapon)), this.delayBetweenRequest);
+      if (this.selectedList == "weapons")
+        setTimeout(() => (this.weaponsNames = this.addItem(this.weaponsNames, this.weaponsNamesTotal, this.requestWeapon)), this.delayBetweenRequest);
     },
     requestRelic() {
-      setTimeout(() => (this.relicsNames = this.addItem(this.relicsNames, this.relicsNamesTotal, this.requestRelic)), this.delayBetweenRequest);
+      if (this.selectedList == "relics")
+        setTimeout(() => (this.relicsNames = this.addItem(this.relicsNames, this.relicsNamesTotal, this.requestRelic)), this.delayBetweenRequest);
     },
     requestMod() {
-      setTimeout(() => (this.modsNames = this.addItem(this.modsNames, this.modsNamesTotal, this.requestMod)), this.delayBetweenRequest);
+      if (this.selectedList == "mods")
+        setTimeout(() => (this.modsNames = this.addItem(this.modsNames, this.modsNamesTotal, this.requestMod)), this.delayBetweenRequest);
     },
     requestArcane() {
-      setTimeout(() => (this.arcaneNames = this.addItem(this.arcaneNames, this.arcaneNamesTotal, this.requestArcane)), this.delayBetweenRequest);
+      if (this.selectedList == "arcane")
+        setTimeout(() => (this.arcaneNames = this.addItem(this.arcaneNames, this.arcaneNamesTotal, this.requestArcane)), this.delayBetweenRequest);
     },
     selectFrame() {
       this.selectedList = "warframes";

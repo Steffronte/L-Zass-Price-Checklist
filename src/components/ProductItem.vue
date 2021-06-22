@@ -1,17 +1,17 @@
 <template>
   <tr v-if="isLoading">
-    <td colspan="5"><Spinner fill="red" height="30px" dur="1.0s" /> Chargement de {{ itemName }} en cours...</td>
+    <td :colspan="nbCol"><Spinner fill="red" height="30px" dur="1.0s" /> Chargement de {{ itemName }} en cours...</td>
   </tr>
   <tr v-else-if="isError">
-    <td colspan="5">
+    <td :colspan="nbCol">
       Une erreur est survenu lors de la récupération des données de
       {{ itemName }} sur Warframe Market.
     </td>
   </tr>
   <tr v-else-if="item">
-    <td><img :src="itemThumbUrl" /></td>
+    <td><img :src="itemThumbUrl" :height="imgHeight" /></td>
     <td>{{ itemDetail.fr.item_name }}</td>
-    <td>{{ itemDetail.en.item_name }}</td>
+    <td v-if="showEnglish">{{ itemDetail.en.item_name }}</td>
     <td>{{ item.payload.statistics_closed["90days"].slice(-1)[0].moving_avg }}</td>
     <td>{{ item.payload.statistics_closed["48hours"].slice(-1)[0].moving_avg }}</td>
   </tr>
@@ -26,26 +26,8 @@ export default {
   name: "ProductItem",
   props: {
     itemName: String,
-  },
-  computed: {
-    url() {
-      return (
-        window.location.protocol +
-        "//" +
-        window.location.host +
-        "/v1/items/" +
-        this.itemName +
-        "/statistics?include=item"
-      );
-    },
-    itemDetail() {
-      return this.item == null ? null : this.item.include.item.items_in_set
-        .filter((i) => i.url_name == this.itemName)
-        .shift();
-    },
-    itemThumbUrl() {
-      return this.itemDetail == null ? null : "https://warframe.market/static/assets/" + this.itemDetail.thumb;
-    },
+    showEnglish: Boolean,
+    imgHeight: Number,
   },
   data() {
     return {
@@ -54,13 +36,32 @@ export default {
       isError: false,
     };
   },
+  computed: {
+    url() {
+      return window.location.protocol + "//" + window.location.host + "/v1/items/" + this.itemName + "/statistics?include=item";
+    },
+    itemDetail() {
+      return this.item == null ? null : this.item.include.item.items_in_set.filter((i) => i.url_name == this.itemName).shift();
+    },
+    itemThumbUrl() {
+      return this.itemDetail == null ? null : "https://warframe.market/static/assets/" + this.itemDetail.thumb;
+    },
+    nbCol() {
+      return this.showEnglish ? 5 : 4;
+    }
+  },
+  methods: {
+    downloadData() {
+      this.isLoading = true;
+      axios
+        .get(this.url)
+        .then((response) => (this.item = response.data))
+        .catch(() => (this.isError = true))
+        .finally(() => (this.isLoading = false));
+    },
+  },
   mounted() {
-    this.isLoading = true;
-    axios
-      .get(this.url)
-      .then((response) => (this.item = response.data))
-      .catch(() => (this.isError = true))
-      .finally(() => (this.isLoading = false));
+    this.downloadData();
   },
 };
 </script>
