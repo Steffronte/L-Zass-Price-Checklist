@@ -1,8 +1,6 @@
 <template>
   <div class="productList">
-    <h2>{{ title }}
-      <template v-if="names.length < totalNumber"> <Spinner fill="blue" height="30px" dur="1.0s" /> ({{ names.length }}/{{ totalNumber }}) </template>
-    </h2>
+    <h2 v-if="names.length < totalNumber"><Spinner fill="blue" height="30px" dur="1.0s" /> Récupération en cours... ({{ names.length }}/{{ totalNumber }})</h2>
     <table class="tableList">
       <tr>
         <th>Image</th>
@@ -24,7 +22,6 @@ export default {
   components: { ProductItem, Spinner },
   name: "ProductList",
   props: {
-    title: String,
     names: Array,
     totalNumber: Number,
     showEnglish: { type: Boolean, default: false },
@@ -35,9 +32,6 @@ export default {
       return this.names.length == this.totalNumber ? "" : "(" + this.names.length + "/" + this.totalNumber + ")";
     },
   },
-  mounted() {
-    console.log(this.imgHeight);
-  }
 };
 </script>
 

@@ -5,17 +5,10 @@
   <button :class="{ isSelected: selectedList == 'relics' }" @click="selectRelic">Reliques</button>
   <button :class="{ isSelected: selectedList == 'mods' }" @click="selectMod">Mods légendaires</button>
   <button :class="{ isSelected: selectedList == 'arcane' }" @click="selectArcane">Arcanes</button>
-  <ProductList :title="'Warframes'" :names="frameNames" :totalNumber="frameNamesTotal.length" v-show="selectedList == 'warframes'" />
-  <ProductList :title="'Armes'" :names="weaponsNames" :totalNumber="weaponsNamesTotal.length" v-show="selectedList == 'weapons'" />
-  <ProductList :title="'Reliques'" :names="relicsNames" :totalNumber="relicsNamesTotal.length" v-show="selectedList == 'relics'" />
-  <ProductList
-    :title="'Mods légendaires'"
-    :names="modsNames"
-    :totalNumber="modsNamesTotal.length"
-    :imgHeight="128"
-    :showEnglish="true"
-    v-show="selectedList == 'mods'"
-  />
+  <ProductList :names="frameNames" :totalNumber="frameNamesTotal.length" v-show="selectedList == 'warframes'" />
+  <ProductList :names="weaponsNames" :totalNumber="weaponsNamesTotal.length" v-show="selectedList == 'weapons'" />
+  <ProductList :names="relicsNames" :totalNumber="relicsNamesTotal.length" v-show="selectedList == 'relics'" />
+  <ProductList :names="modsNames" :totalNumber="modsNamesTotal.length" :imgHeight="128" :showEnglish="true" v-show="selectedList == 'mods'" />
   <ProductList :title="'Arcanes'" :names="arcaneNames" :totalNumber="arcaneNamesTotal.length" :showEnglish="true" v-show="selectedList == 'arcane'" />
 </template>
 
@@ -102,20 +95,15 @@ export default {
       this.requestArcane();
     },
     loadItems(items) {
-      console.log("extracted list");
+      console.info("extracted list");
       this.frameNamesTotal = warframeService.getDefaultList();
-      console.log("frame ok");
       this.weaponsNamesTotal = weaponService.extractFromList(items);
-      console.log("weapon ok");
       this.relicsNamesTotal = relicService.extractFromList(items);
-      console.log("relics ok");
       this.modsNamesTotal = primedModService.extractFromList(items);
-      console.log("mods ok");
       this.arcaneNamesTotal = arcaneService.extractFromList(items);
-      console.log("arcane ok");
     },
     loadDefaultItems() {
-      console.log("default list");
+      console.error("default list");
       this.frameNamesTotal = warframeService.getDefaultList();
       this.weaponsNamesTotal = weaponService.getDefaultList();
       this.relicsNamesTotal = relicService.getDefaultList();
