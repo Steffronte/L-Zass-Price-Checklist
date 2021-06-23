@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import itemService from "@/services/ItemService.js";
 import Spinner from "./IconSpinner.vue";
 
 export default {
@@ -37,9 +37,6 @@ export default {
     };
   },
   computed: {
-    url() {
-      return window.location.protocol + "//" + window.location.host + "/v1/items/" + this.itemName + "/statistics?include=item";
-    },
     itemDetail() {
       return this.item == null ? null : this.item.include.item.items_in_set.filter((i) => i.url_name == this.itemName).shift();
     },
@@ -53,8 +50,8 @@ export default {
   methods: {
     downloadData() {
       this.isLoading = true;
-      axios
-        .get(this.url)
+      itemService
+        .getByUrlName(this.itemName)
         .then((response) => (this.item = response.data))
         .catch(() => (this.isError = true))
         .finally(() => (this.isLoading = false));
