@@ -1,13 +1,5 @@
 <template>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    x="0px"
-    y="0px"
-    viewBox="0 0 80 80"
-    xml:space="preserve"
-    :height="height"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 80 80" xml:space="preserve" :height="height">
     <path
       :fill="fill"
       d="M10,40c0,0,0-0.4,0-1.1c0-0.3,0-0.8,0-1.3c0-0.3,0-0.5,0-0.8c0-0.3,0.1-0.6,0.1-0.9c0.1-0.6,0.1-1.4,0.2-2.1
@@ -24,15 +16,7 @@
 				c-0.7,0.9-1.3,1.9-1.9,2.8c-0.5,1-1,1.9-1.4,2.8c-0.4,0.9-0.8,1.8-1,2.6c-0.3,0.9-0.5,1.6-0.7,2.4c-0.2,0.7-0.3,1.4-0.4,2.1
 				c-0.1,0.3-0.1,0.6-0.2,0.9c0,0.3-0.1,0.6-0.1,0.8c0,0.5-0.1,0.9-0.1,1.3C10,39.6,10,40,10,40z"
     >
-      <animateTransform
-        attributeType="xml"
-        attributeName="transform"
-        type="rotate"
-        from="0 40 40"
-        to="360 40 40"
-        :dur="dur"
-        repeatCount="indefinite"
-      />
+      <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 40 40" to="360 40 40" :dur="dur" repeatCount="indefinite" />
     </path>
   </svg>
 </template>
