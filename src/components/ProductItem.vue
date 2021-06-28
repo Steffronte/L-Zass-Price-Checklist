@@ -12,8 +12,11 @@
     <td><img :src="itemThumbUrl" :height="imgHeight" /></td>
     <td>{{ itemDetail.fr.item_name }}</td>
     <td v-if="showEnglish">{{ itemDetail.en.item_name }}</td>
-    <td>{{ item.payload.statistics_closed["90days"].slice(-1)[0].moving_avg }}</td>
-    <td>{{ item.payload.statistics_closed["48hours"].slice(-1)[0].moving_avg }}</td>
+    <td>{{ getLastPriceOf(item.payload.statistics_closed["90days"]) }}</td>
+    <td>{{ getLastPriceOf(item.payload.statistics_closed["48hours"]) }}</td>
+  </tr>
+  <tr v-else>
+    <td :colspan="nbCol">Chargement imminent, ou bien erreur interne.</td>
   </tr>
 </template>
 
@@ -26,12 +29,12 @@ export default {
   name: "ProductItem",
   props: {
     itemName: String,
+    item: Object,
     showEnglish: Boolean,
     imgHeight: Number,
   },
   data() {
     return {
-      item: null,
       isLoading: false,
       isError: false,
     };
@@ -45,16 +48,19 @@ export default {
     },
     nbCol() {
       return this.showEnglish ? 5 : 4;
-    }
+    },
   },
   methods: {
     downloadData() {
       this.isLoading = true;
       itemService
         .getByUrlName(this.itemName)
-        .then((response) => (this.item = response.data))
+        .then((response) => this.$emit("itemUpdate", { ...response.data, url_name: this.itemName }))
         .catch(() => (this.isError = true))
         .finally(() => (this.isLoading = false));
+    },
+    getLastPriceOf(stats) {
+      return stats.length == 0 ? "-" : stats.slice(-1)[0].median;
     },
   },
   mounted() {

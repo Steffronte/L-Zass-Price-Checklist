@@ -5,15 +5,54 @@
   <button :class="{ isSelected: selectedList == 'relics' }" @click="selectRelic">Reliques</button>
   <button :class="{ isSelected: selectedList == 'mods' }" @click="selectMod">Mods légendaires</button>
   <button :class="{ isSelected: selectedList == 'arcane' }" @click="selectArcane">Arcanes</button>
-  <ProductList :names="frameNames" :totalNumber="frameNamesTotal.length" v-show="selectedList == 'warframes'" />
-  <ProductList :names="weaponsNames" :totalNumber="weaponsNamesTotal.length" v-show="selectedList == 'weapons'" />
-  <ProductList :names="relicsNames" :totalNumber="relicsNamesTotal.length" v-show="selectedList == 'relics'" />
-  <ProductList :names="modsNames" :totalNumber="modsNamesTotal.length" :imgHeight="128" :showEnglish="true" v-show="selectedList == 'mods'" />
-  <ProductList :title="'Arcanes'" :names="arcaneNames" :totalNumber="arcaneNamesTotal.length" :showEnglish="true" v-show="selectedList == 'arcane'" />
+  <ProductList
+    :names="frameNames"
+    :totalNumber="frameNamesTotal.length"
+    :itemList="frameList"
+    v-on:itemUpdate="addFrame"
+    v-on:itemSort="sortFrame"
+    v-show="selectedList == 'warframes'"
+  />
+  <ProductList
+    :names="weaponsNames"
+    :totalNumber="weaponsNamesTotal.length"
+    :itemList="weaponsList"
+    v-on:itemUpdate="addWeapon"
+    v-on:itemSort="sortWeapon"
+    v-show="selectedList == 'weapons'"
+  />
+  <ProductList
+    :names="relicsNames"
+    :totalNumber="relicsNamesTotal.length"
+    :itemList="relicsList"
+    v-on:itemUpdate="addRelic"
+    v-on:itemSort="sortRelic"
+    v-show="selectedList == 'relics'"
+  />
+  <ProductList
+    :names="modsNames"
+    :totalNumber="modsNamesTotal.length"
+    :imgHeight="128"
+    :showEnglish="true"
+    :itemList="modsList"
+    v-on:itemUpdate="addMod"
+    v-on:itemSort="sortMod"
+    v-show="selectedList == 'mods'"
+  />
+  <ProductList
+    :names="arcaneNames"
+    :totalNumber="arcaneNamesTotal.length"
+    :showEnglish="true"
+    :itemList="arcaneList"
+    v-on:itemUpdate="addArcane"
+    v-on:itemSort="sortArcane"
+    v-show="selectedList == 'arcane'"
+  />
 </template>
 
 <script>
 import ProductList from "./components/ProductList.vue";
+import SortConstantMixin from "@/mixins/SortConstantMixin.js";
 import itemService from "@/services/ItemService.js";
 import warframeService from "@/services/WarframeService.js";
 import weaponService from "@/services/WeaponService.js";
@@ -23,22 +62,31 @@ import arcaneService from "@/services/ArcaneService.js";
 
 export default {
   components: { ProductList },
+  mixins: [SortConstantMixin],
   data() {
     return {
       isLoading: true,
       itemPerRequest: 3,
       delayBetweenRequest: 1500,
       selectedList: "warframes",
+      //Slowly increasing names list for AntiDDOS
       frameNames: [],
       weaponsNames: [],
       modsNames: [],
       relicsNames: [],
       arcaneNames: [],
+      //Total name list
       frameNamesTotal: [],
       weaponsNamesTotal: [],
       modsNamesTotal: [],
       relicsNamesTotal: [],
       arcaneNamesTotal: [],
+      //Item list, data added from event
+      frameList: [],
+      weaponsList: [],
+      modsList: [],
+      relicsList: [],
+      arcaneList: [],
     };
   },
   methods: {
@@ -109,6 +157,62 @@ export default {
       this.relicsNamesTotal = relicService.getDefaultList();
       this.modsNamesTotal = primedModService.getDefaultList();
       this.arcaneNamesTotal = arcaneService.getDefaultList();
+    },
+    addFrame(item) {
+      this.frameList = this.frameList.concat([item]); //No push for reactivity
+    },
+    addWeapon(item) {
+      this.weaponsList = this.weaponsList.concat([item]); //No push for reactivity
+    },
+    addRelic(item) {
+      this.relicsList = this.relicsList.concat([item]); //No push for reactivity
+    },
+    addMod(item) {
+      this.modsList = this.modsList.concat([item]); //No push for reactivity
+    },
+    addArcane(item) {
+      this.arcaneList = this.arcaneList.concat([item]); //No push for reactivity
+    },
+    itemSort(list, nameList, type, isAsc) {
+      let f;
+      let findByName = (name) => list.filter((i) => i.url_name == name)[0];
+      let findDetail = (name) =>
+        findByName(name)
+          .include.item.items_in_set.filter((i) => i.url_name == name)
+          .shift();
+      let getLastPriceOf = (stats) => (stats.length == 0 ? -1 : stats.slice(-1)[0].median);
+      switch (type) {
+        case this.FR_NAME:
+          f = (a, b) => findDetail(a).fr.item_name.localeCompare(findDetail(b).fr.item_name);
+          break;
+        case this.EN_NAME:
+          f = (a, b) => findDetail(a).en.item_name.localeCompare(findDetail(b).en.item_name);
+          break;
+        case this.MED_J:
+          f = (a, b) => getLastPriceOf(findByName(a).payload.statistics_closed["90days"]) - getLastPriceOf(findByName(b).payload.statistics_closed["90days"]);
+          break;
+        case this.MED_H:
+          f = (a, b) => getLastPriceOf(findByName(a).payload.statistics_closed["48hours"]) - getLastPriceOf(findByName(b).payload.statistics_closed["48hours"]);
+          break;
+      }
+      nameList.sort(f);
+      if (!isAsc) nameList.reverse();
+      return nameList;
+    },
+    sortFrame(type, isAsc) {
+      this.frameNames = this.itemSort(this.frameList.slice(), this.frameNames.slice(), type, isAsc);
+    },
+    sortWeapon(type, isAsc) {
+      this.weaponsNames = this.itemSort(this.weaponsList.slice(), this.weaponsNames.slice(), type, isAsc);
+    },
+    sortRelic(type, isAsc) {
+      this.relicsNames = this.itemSort(this.relicsList.slice(), this.relicsNames.slice(), type, isAsc);
+    },
+    sortMod(type, isAsc) {
+      this.modsNames = this.itemSort(this.modsList.slice(), this.modsNames.slice(), type, isAsc);
+    },
+    sortArcane(type, isAsc) {
+      this.arcaneNames = this.itemSort(this.arcaneList.slice(), this.arcaneNames.slice(), type, isAsc);
     },
   },
   mounted() {
