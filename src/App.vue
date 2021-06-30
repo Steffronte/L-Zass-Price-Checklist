@@ -1,5 +1,9 @@
 <template>
   <h1>L-Zass price checklist</h1>
+  <p>
+    Price checklist permet de connaitre rapidement l'état du marché sur Warframe. Il propose des listes d'items mises à jour automatiquement et triable. Dans
+    warframe, les prix oscillent souvent à cause du Prime Vault, de Baro et des events.
+  </p>
   <button :class="{ isSelected: selectedList == 'warframes' }" @click="selectFrame">Warframes</button>
   <button :class="{ isSelected: selectedList == 'weapons' }" @click="selectWeapon">Armes</button>
   <button :class="{ isSelected: selectedList == 'relics' }" @click="selectRelic">Reliques</button>
@@ -48,6 +52,16 @@
     v-on:itemSort="sortArcane"
     v-show="selectedList == 'arcane'"
   />
+  <footer>
+    Toutes les données proviennent de <a href="https://warframe.market">WarFrame Market</a>. Si la mise à jour des listes est si lente, c'est parce que l'api
+    limite le nombre de requêtes par secondes.
+    <br />
+    Digital Extremes Ltd, Warframe and the logo Warframe are registered trademarks. All rights are reserved worldwide. This site has no official link with
+    Digital Extremes Ltd or Warframe. All artwork, screenshots, characters or other recognizable features of the intellectual property relating to these
+    trademarks are likewise the intellectual property of Digital Extremes Ltd.
+    <br />
+    Créé par Steffronté
+  </footer>
 </template>
 
 <script>
