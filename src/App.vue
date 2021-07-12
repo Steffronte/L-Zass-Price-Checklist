@@ -10,19 +10,21 @@
   <button :class="{ isSelected: selectedList == RELICS }" @click="selectedList = RELICS">Reliques</button>
   <button :class="{ isSelected: selectedList == MODS }" @click="selectedList = MODS">Mods</button>
   <button :class="{ isSelected: selectedList == ARCANES }" @click="selectedList = ARCANES">Arcanes</button>
-  <button :class="{ isSelected: selectedList == GEMS_FISH }" @click="selectedList = GEMS_FISH">Gemmes & Poissons</button>
+  <button :class="{ isSelected: selectedList == GEMS }" @click="selectedList = GEMS">Gemmes</button>
+  <button :class="{ isSelected: selectedList == FISH }" @click="selectedList = FISH">Poissons</button>
   <template v-if="!isLoading">
     <ProductList :itemList="frameList" v-on:itemSort="itemSort" v-show="selectedList == WARFRAMES" />
     <ProductList :itemList="weaponsList" v-on:itemSort="itemSort" v-show="selectedList == WEAPONS" />
     <ProductList :itemList="primeSetList" v-on:itemSort="itemSort" v-show="selectedList == PRIME_SETS" />
     <ProductList :itemList="relicsList" v-on:itemSort="itemSort" v-show="selectedList == RELICS" />
-    <ProductList :showEnglish="true" :itemList="arcaneList" v-on:itemSort="sortArcane" v-show="selectedList == ARCANES" />
+    <ProductList :showEnglish="true" :itemList="arcaneList" v-on:itemSort="itemSort" v-show="selectedList == ARCANES" />
     <ProductList :imgHeight="128" :showEnglish="true" :itemList="modsList" v-on:itemSort="itemSort" v-show="selectedList == MODS" />
-    <ProductList :itemList="gemsFishList" v-on:itemSort="itemSort" v-show="selectedList == GEMS_FISH" />
+    <ProductList :itemList="gemsList" v-on:itemSort="itemSort" v-show="selectedList == GEMS" />
+    <ProductList :itemList="fishList" v-on:itemSort="itemSort" v-show="selectedList == FISH" />
   </template>
   <p v-else><Spinner fill="blue" height="30px" dur="1.0s" /> Récupération en cours...</p>
   <footer>
-    Toutes les données proviennent de <a href="https://warframe.market">WarFrame Market</a>. La mise à jour des données aura lieu dans la nuit lorsqu'elle sera
+    Toutes les données proviennent de <a href="https://warframe.market">Warframe Market</a>. La mise à jour des données aura lieu dans la nuit lorsqu'elle sera
     sera automatisée. Dernière mise à jour le {{ lastUpdate }}.
     <br />
     Digital Extremes Ltd, Warframe and the logo Warframe are registered trademarks. All rights are reserved worldwide. This site has no official link with
@@ -53,7 +55,16 @@ export default {
       modsList: [],
       relicsList: [],
       arcaneList: [],
-      gemsFishList: [],
+      gemsList: [],
+      fishList: [],
+      WARFRAMES: "WARFRAMES",
+      WEAPONS: "WEAPONS",
+      RELICS: "RELICS",
+      MODS: "MODS",
+      ARCANES: "ARCANES",
+      PRIME_SETS: "OTHER_PRIME_SETS",
+      GEMS: "GEMS",
+      FISH: "FISH",
     };
   },
   methods: {
@@ -65,38 +76,68 @@ export default {
       this.relicsList = allData.relics;
       this.modsList = allData.mods;
       this.arcaneList = allData.arcanes;
-      this.gemsFishList = allData.gemsFish;
+      this.gemsList = allData.gems;
+      this.fishList = allData.fish;
     },
     itemSort(type, isAsc) {
+      let list = this.getSelectedList();
+      console.log(type, isAsc);
+      let f;
+      switch (type) {
+        case this.FR_NAME:
+          f = (a, b) => a.detail.fr.item_name.localeCompare(b.detail.fr.item_name);
+          break;
+        case this.EN_NAME:
+          f = (a, b) => a.detail.en.item_name.localeCompare(b.detail.en.item_name);
+          break;
+        case this.MED_0:
+          f = (a, b) => a.stats[0].stat0.median - b.stats[0].stat0.median;
+          break;
+        case this.MED_30:
+          f = (a, b) => a.stats[0].stat30.median - b.stats[0].stat30.median;
+          break;
+        case this.MED_60:
+          f = (a, b) => a.stats[0].stat60.median - b.stats[0].stat60.median;
+          break;
+        case this.MED_90:
+          f = (a, b) => a.stats[0].stat90.median - b.stats[0].stat90.median;
+          break;
+      }
+      list.sort(f);
+      if (!isAsc) list.reverse();
+    },
+    getSelectedList() {
       let list;
       switch (this.selectedList) {
         case this.WARFRAMES:
           list = this.frameList;
           break;
-        //TODO
+        case this.WEAPON:
+          list = this.weaponsList;
+          break;
+        case this.PRIME_SETS:
+          list = this.primeSetList;
+          break;
+        case this.RELICS:
+          list = this.relicsList;
+          break;
+        case this.MODS:
+          list = this.modsList;
+          break;
+        case this.ARCANES:
+          list = this.arcaneList;
+          break;
+        case this.GEMS:
+          list = this.gemsList;
+          break;
+        case this.FISH:
+          list = this.fishList;
+          break;
+        default:
+          alert("Erreur lors du tri, liste inconnue : " + this.selectedList);
+          return;
       }
-      console.log(list, type, isAsc);
-      /*let f;
-      let findByName = (name) => list.filter((i) => i.url_name == name)[0];
-      let findDetail = (name) =>
-        findByName(name)
-          .include.item.items_in_set.filter((i) => i.url_name == name)
-          .shift();
-      let getLastPriceOf = (stats) => (stats.length == 0 ? -1 : stats.slice(-1)[0].median);
-      switch (type) {
-        case this.FR_NAME:
-          f = (a, b) => findDetail(a).fr.item_name.localeCompare(findDetail(b).fr.item_name);
-          break;
-        case this.EN_NAME:
-          f = (a, b) => findDetail(a).en.item_name.localeCompare(findDetail(b).en.item_name);
-          break;
-        case this.MED_J:
-          f = (a, b) => getLastPriceOf(findByName(a).payload.statistics_closed["90days"]) - getLastPriceOf(findByName(b).payload.statistics_closed["90days"]);
-          break;
-      }
-      nameList.sort(f);
-      if (!isAsc) nameList.reverse();
-      return nameList;*/
+      return list;
     },
   },
   mounted() {

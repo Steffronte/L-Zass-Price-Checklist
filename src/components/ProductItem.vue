@@ -1,13 +1,23 @@
 <template>
   <tr>
-    <td><img :src="itemThumbUrl" :height="imgHeight" :style="colThumbStyle" /></td>
-    <td>{{ item.detail.fr.item_name }}</td>
-    <td v-if="showEnglish">{{ item.detail.en.item_name }}</td>
-    <td>{{ getMedianPriceOfDay(90) }}</td>
-    <td>{{ getMedianPriceOfDay(60) }}</td>
-    <td>{{ getMedianPriceOfDay(30) }}</td>
-    <td>{{ getMedianPriceOfDay(0) }}</td>
+    <td :rowspan="nbRow"><img :src="itemThumbUrl" :height="imgHeight" :style="colThumbStyle" /></td>
+    <td :rowspan="nbRow">{{ item.detail.fr.item_name }}</td>
+    <td :rowspan="nbRow" v-if="showEnglish">{{ item.detail.en.item_name }}</td>
+    <td v-if="isRanked">{{ isReallyRanked ? item.stats[0].rank : "?" }}</td>
+    <td>{{ getMedianPriceOfDay(item.stats[0], 90) }}</td>
+    <td>{{ getMedianPriceOfDay(item.stats[0], 60) }}</td>
+    <td>{{ getMedianPriceOfDay(item.stats[0], 30) }}</td>
+    <td>{{ getMedianPriceOfDay(item.stats[0], 0) }}</td>
   </tr>
+  <template v-for="(s, i) in item.stats" :key="i">
+    <tr v-if="i > 0">
+      <td v-if="isRanked">{{ s.rank }}</td>
+      <td>{{ getMedianPriceOfDay(s, 90) }}</td>
+      <td>{{ getMedianPriceOfDay(s, 60) }}</td>
+      <td>{{ getMedianPriceOfDay(s, 30) }}</td>
+      <td>{{ getMedianPriceOfDay(s, 0) }}</td>
+    </tr>
+  </template>
 </template>
 
 <script>
@@ -18,22 +28,29 @@ export default {
     item: Object,
     showEnglish: Boolean,
     imgHeight: Number,
+    isRanked: Boolean,
   },
   computed: {
     itemThumbUrl() {
       return "https://warframe.market/static/assets/" + this.item.detail.thumb;
     },
-    nbCol() {
-      return this.showEnglish ? 7 : 6;
+    nbRow() {
+      return this.item.stats.length == 0 ? 1 : this.item.stats.length;
     },
     colThumbStyle() {
       return "max-width:" + this.imgHeight * 3 + "px";
     },
+    hasStats() {
+      return this.item.stats.length > 0;
+    },
+    isReallyRanked() {
+      return this.hasStats && this.item.stats[0].rank != undefined;
+    },
   },
   methods: {
-    getMedianPriceOfDay(day) {
-      if (!this.item.stats["stat" + day]) return "?";
-      const price = this.item.stats["stat" + day].median;
+    getMedianPriceOfDay(s, day) {
+      if (!this.hasStats) return "?";
+      const price = s["stat" + day].median;
       return price == -1 ? "-" : price;
     },
   },

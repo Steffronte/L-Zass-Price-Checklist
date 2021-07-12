@@ -5,30 +5,37 @@
         <th>Image</th>
         <th>
           Nom FR
-          <template><span @click="sort(FR_NAME, true)">↓</span><span @click="sort(FR_NAME, false)">↑</span></template>
+          <span @click="sort(FR_NAME, true)">↓</span>
+          <span @click="sort(FR_NAME, false)">↑</span>
         </th>
         <th v-if="showEnglish">
           Nom EN
-          <template><span @click="sort(EN_NAME, true)">↓</span><span @click="sort(EN_NAME, false)">↑</span></template>
+          <span @click="sort(EN_NAME, true)">↓</span>
+          <span @click="sort(EN_NAME, false)">↑</span>
+        </th>
+        <th v-if="isRanked">Rang</th>
+        <th>
+          J-90
+          <span @click="sort(MED_90, true)">↓</span>
+          <span @click="sort(MED_90, false)">↑</span>
         </th>
         <th>
-          Méd J-90
-          <template><span @click="sort(MED_90, true)">↓</span><span @click="sort(MED_90, false)">↑</span></template>
+          J-60
+          <span @click="sort(MED_60, true)">↓</span>
+          <span @click="sort(MED_60, false)">↑</span>
         </th>
         <th>
-          Méd J-60
-          <template><span @click="sort(MED_60, true)">↓</span><span @click="sort(MED_60, false)">↑</span></template>
+          J-30
+          <span @click="sort(MED_30, true)">↓</span>
+          <span @click="sort(MED_30, false)">↑</span>
         </th>
         <th>
-          Méd J-30
-          <template><span @click="sort(MED_30, true)">↓</span><span @click="sort(MED_30, false)">↑</span></template>
-        </th>
-        <th>
-          Méd J-1
-          <template><span @click="sort(MED_0, true)">↓</span><span @click="sort(MED_0, false)">↑</span></template>
+          J-1
+          <span @click="sort(MED_0, true)">↓</span>
+          <span @click="sort(MED_0, false)">↑</span>
         </th>
       </tr>
-      <ProductItem v-for="item in itemList" :key="item.detail.url_name" :item="item" :showEnglish="showEnglish" :imgHeight="imgHeight" />
+      <ProductItem v-for="item in itemList" :key="item.detail.url_name" :item="item" :showEnglish="showEnglish" :imgHeight="imgHeight" :isRanked="isRanked" />
     </table>
   </div>
 </template>
@@ -48,8 +55,13 @@ export default {
   },
   methods: {
     sort(type, isAsc) {
-      console.log(type, isAsc);
       this.$emit("itemSort", type, isAsc);
+    },
+  },
+  computed: {
+    isRanked() {
+      console.log(this.itemList[0].stats[0]);
+      return this.itemList ? this.itemList[0].stats[0].rank != undefined : false;
     },
   },
 };
@@ -62,5 +74,8 @@ h1 {
 .tableList {
   margin-left: auto;
   margin-right: auto;
+}
+.tableList th span {
+  cursor: pointer;
 }
 </style>
