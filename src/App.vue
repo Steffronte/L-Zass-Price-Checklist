@@ -13,14 +13,14 @@
   <button :class="{ isSelected: selectedList == GEMS }" @click="selectedList = GEMS">Gemmes</button>
   <button :class="{ isSelected: selectedList == FISH }" @click="selectedList = FISH">Poissons</button>
   <template v-if="!isLoading">
-    <ProductList :itemList="frameList" v-on:itemSort="itemSort" v-show="selectedList == WARFRAMES" />
-    <ProductList :itemList="weaponsList" v-on:itemSort="itemSort" v-show="selectedList == WEAPONS" />
-    <ProductList :itemList="primeSetList" v-on:itemSort="itemSort" v-show="selectedList == PRIME_SETS" />
-    <ProductList :itemList="relicsList" v-on:itemSort="itemSort" v-show="selectedList == RELICS" />
-    <ProductList :showEnglish="true" :itemList="arcaneList" v-on:itemSort="itemSort" v-show="selectedList == ARCANES" />
-    <ProductList :imgHeight="128" :showEnglish="true" :itemList="modsList" v-on:itemSort="itemSort" v-show="selectedList == MODS" />
-    <ProductList :itemList="gemsList" v-on:itemSort="itemSort" v-show="selectedList == GEMS" />
-    <ProductList :itemList="fishList" v-on:itemSort="itemSort" v-show="selectedList == FISH" />
+    <ProductList :itemList="frameList" v-on="handlers" v-show="selectedList == WARFRAMES" :listName="WARFRAMES" />
+    <ProductList :itemList="weaponsList" v-on="handlers" v-show="selectedList == WEAPONS" :listName="WEAPONS" />
+    <ProductList :itemList="primeSetList" v-on="handlers" v-show="selectedList == PRIME_SETS" :listName="PRIME_SETS" />
+    <ProductList :imgHeight="48" :itemList="relicsList" v-on="handlers" v-show="selectedList == RELICS" :listName="RELICS" />
+    <ProductList :imgHeight="48" :showEnglish="true" :itemList="arcaneList" v-on="handlers" v-show="selectedList == ARCANES" :listName="ARCANES" />
+    <ProductList :imgHeight="128" :showEnglish="true" :itemList="modsList" v-on="handlers" v-show="selectedList == MODS" :listName="MODS" />
+    <ProductList :itemList="gemsList" v-on="handlers" v-show="selectedList == GEMS" :listName="GEMS" />
+    <ProductList :itemList="fishList" v-on="handlers" v-show="selectedList == FISH" :listName="FISH" />
   </template>
   <p v-else><Spinner fill="blue" height="30px" dur="1.0s" /> Récupération en cours...</p>
   <footer>
@@ -39,11 +39,12 @@
 import ProductList from "./components/ProductList.vue";
 import Spinner from "./components/IconSpinner.vue";
 import SortConstantMixin from "@/mixins/SortConstantMixin.js";
+import ListNameMixin from "@/mixins/ListNameMixin.js";
 import itemService from "@/services/ItemService.js";
 
 export default {
   components: { ProductList, Spinner },
-  mixins: [SortConstantMixin],
+  mixins: [SortConstantMixin, ListNameMixin],
   data() {
     return {
       isLoading: true,
@@ -57,14 +58,10 @@ export default {
       arcaneList: [],
       gemsList: [],
       fishList: [],
-      WARFRAMES: "WARFRAMES",
-      WEAPONS: "WEAPONS",
-      RELICS: "RELICS",
-      MODS: "MODS",
-      ARCANES: "ARCANES",
-      PRIME_SETS: "OTHER_PRIME_SETS",
-      GEMS: "GEMS",
-      FISH: "FISH",
+      handlers: {
+        sort: this.sort,
+        filters: this.filters,
+      },
     };
   },
   methods: {
@@ -79,9 +76,8 @@ export default {
       this.gemsList = allData.gems;
       this.fishList = allData.fish;
     },
-    itemSort(type, isAsc) {
+    sort(type, isAsc) {
       let list = this.getSelectedList();
-      console.log(type, isAsc);
       let f;
       switch (type) {
         case this.FR_NAME:
@@ -106,13 +102,25 @@ export default {
       list.sort(f);
       if (!isAsc) list.reverse();
     },
+    filters(data) {
+      const list = this.getSelectedList();
+      const normalizeName = (name) => name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      list.forEach((item, index) => {
+        let hide = false;
+        if (data.tag1 && !hide) hide = !item.detail.tags.includes(data.tag1);
+        if (data.tag2 && !hide) hide = !item.detail.tags.includes(data.tag2);
+        if (data.nameFr && !hide) hide = !normalizeName(item.detail.fr.item_name).includes(normalizeName(data.nameFr));
+        if (data.nameEn && !hide) hide = !normalizeName(item.detail.en.item_name).includes(normalizeName(data.nameEn));
+        list[index].hide = hide;
+      });
+    },
     getSelectedList() {
       let list;
       switch (this.selectedList) {
         case this.WARFRAMES:
           list = this.frameList;
           break;
-        case this.WEAPON:
+        case this.WEAPONS:
           list = this.weaponsList;
           break;
         case this.PRIME_SETS:
@@ -134,7 +142,7 @@ export default {
           list = this.fishList;
           break;
         default:
-          alert("Erreur lors du tri, liste inconnue : " + this.selectedList);
+          alert("Erreur, liste inconnue : " + this.selectedList);
           return;
       }
       return list;

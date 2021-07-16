@@ -1,8 +1,8 @@
 <template>
-  <tr>
-    <td :rowspan="nbRow"><img :src="itemThumbUrl" :height="imgHeight" :style="colThumbStyle" /></td>
-    <td :rowspan="nbRow">{{ item.detail.fr.item_name }}</td>
-    <td :rowspan="nbRow" v-if="showEnglish">{{ item.detail.en.item_name }}</td>
+  <tr v-if="showItem">
+    <td v-if="imgHeight > 0" :rowspan="nbRow"><img :src="itemThumbUrl" :height="imgHeight" :style="colThumbStyle" /></td>
+    <td :rowspan="nbRow" class="itemName">{{ item.detail.fr.item_name }}</td>
+    <td :rowspan="nbRow" class="itemName" v-if="showEnglish">{{ item.detail.en.item_name }}</td>
     <td v-if="isRanked">{{ isReallyRanked ? item.stats[0].rank : "?" }}</td>
     <td>{{ getMedianPriceOfDay(item.stats[0], 90) }}</td>
     <td>{{ getMedianPriceOfDay(item.stats[0], 60) }}</td>
@@ -10,7 +10,7 @@
     <td>{{ getMedianPriceOfDay(item.stats[0], 0) }}</td>
   </tr>
   <template v-for="(s, i) in item.stats" :key="i">
-    <tr v-if="i > 0">
+    <tr v-if="i > 0 && showItem">
       <td v-if="isRanked">{{ s.rank }}</td>
       <td>{{ getMedianPriceOfDay(s, 90) }}</td>
       <td>{{ getMedianPriceOfDay(s, 60) }}</td>
@@ -46,6 +46,9 @@ export default {
     isReallyRanked() {
       return this.hasStats && this.item.stats[0].rank != undefined;
     },
+    showItem() {
+      return !this.item.hide;
+    },
   },
   methods: {
     getMedianPriceOfDay(s, day) {
@@ -57,4 +60,8 @@ export default {
 };
 </script>
 
-<style scoped lang="css"></style>
+<style scoped lang="css">
+td.itemName {
+  max-width: 200px;
+}
+</style>

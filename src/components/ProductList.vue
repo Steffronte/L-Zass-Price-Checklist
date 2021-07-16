@@ -1,8 +1,9 @@
 <template>
   <div class="productList">
+    <Filter :listName="listName" :hasEnName="showEnglish" />
     <table class="tableList">
       <tr>
-        <th>Image</th>
+        <th v-if="imgHeight > 0">Image</th>
         <th>
           Nom FR
           <span @click="sort(FR_NAME, true)">↓</span>
@@ -42,25 +43,26 @@
 
 <script>
 import ProductItem from "./ProductItem.vue";
+import Filter from "./Filter.vue";
 import SortConstantMixin from "@/mixins/SortConstantMixin.js";
 
 export default {
-  components: { ProductItem },
+  components: { ProductItem, Filter },
   name: "ProductList",
   mixins: [SortConstantMixin],
   props: {
     itemList: Array,
+    listName: String,
     showEnglish: { type: Boolean, default: false },
     imgHeight: { type: Number, default: 32 },
   },
   methods: {
     sort(type, isAsc) {
-      this.$emit("itemSort", type, isAsc);
+      this.$emit("sort", type, isAsc);
     },
   },
   computed: {
     isRanked() {
-      console.log(this.itemList[0].stats[0]);
       return this.itemList ? this.itemList[0].stats[0].rank != undefined : false;
     },
   },
