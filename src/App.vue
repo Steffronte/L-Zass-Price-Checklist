@@ -2,8 +2,8 @@
   <h1>L-Zass price checklist</h1>
   <h2 class="betaInfo">Beta : outil en cours de développement, des bugs peuvent apparaître</h2>
   <p class="info">
-    Price checklist permet de connaitre rapidement l'état du marché sur Warframe. Il propose des listes d'items mises à jour automatiquement et triable. Dans
-    warframe, les prix oscillent souvent à cause du Prime Vault, de Baro et des events.
+    Price checklist permet de connaitre rapidement l'état du marché sur Warframe. Il propose des listes d'items mises à jour quotidiennement et triables. Des
+    informations supplémentaires sont disponibles au survol, et les wiki FR et EN sont accessibles au clic sur l'image ou les noms.
   </p>
   <button :class="{ isSelected: selectedList == WARFRAMES }" @click="selectedList = WARFRAMES">Warframes</button>
   <button :class="{ isSelected: selectedList == WEAPONS }" @click="selectedList = WEAPONS">Armes</button>
@@ -80,6 +80,7 @@ export default {
       let list = this.getSelectedList();
       let f;
       let findMedian = (i, stat) => (i.stats.length == 0 ? -1 : i.stats[0][stat].median);
+      let getDucat = (i) => (i.detail.ducats ? i.detail.ducats : -1);
       switch (type) {
         case this.FR_NAME:
           f = (a, b) => a.detail.fr.item_name.localeCompare(b.detail.fr.item_name);
@@ -98,6 +99,9 @@ export default {
           break;
         case this.MED_90:
           f = (a, b) => findMedian(a, "stat90") - findMedian(b, "stat90");
+          break;
+        case this.DUCAT:
+          f = (a, b) => getDucat(a) - getDucat(b);
           break;
       }
       list.sort(f);

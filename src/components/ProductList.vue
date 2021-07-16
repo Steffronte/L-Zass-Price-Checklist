@@ -14,6 +14,11 @@
           <span @click="sort(EN_NAME, true)">↓</span>
           <span @click="sort(EN_NAME, false)">↑</span>
         </th>
+        <th v-if="isDucat">
+          Ducat
+          <span @click="sort(DUCAT, true)">↓</span>
+          <span @click="sort(DUCAT, false)">↑</span>
+        </th>
         <th v-if="isRanked">Rang</th>
         <th>
           J-90
@@ -36,7 +41,15 @@
           <span @click="sort(MED_0, false)">↑</span>
         </th>
       </tr>
-      <ProductItem v-for="item in itemList" :key="item.detail.url_name" :item="item" :showEnglish="showEnglish" :imgHeight="imgHeight" :isRanked="isRanked" />
+      <ProductItem
+        v-for="item in itemList"
+        :key="item.detail.url_name"
+        :item="item"
+        :showEnglish="showEnglish"
+        :imgHeight="imgHeight"
+        :isRanked="isRanked"
+        :isDucat="isDucat"
+      />
     </table>
   </div>
 </template>
@@ -65,6 +78,9 @@ export default {
   computed: {
     isRanked() {
       return [this.RELICS, this.MODS, this.ARCANES, this.FISH].includes(this.listName);
+    },
+    isDucat() {
+      return [this.WARFRAMES, this.WEAPONS, this.PRIME_SETS].includes(this.listName);
     },
   },
 };
