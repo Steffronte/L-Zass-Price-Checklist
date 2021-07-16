@@ -4,7 +4,7 @@
     <input placeholder="Nom FR" type="text" v-model="nameFr" />
     <input placeholder="Nom EN" type="text" v-model="nameEn" v-if="hasEnName" />
     <template v-if="tags.length > 0">
-      <select v-model="tag1">
+      <select v-model="tag1" class="tag1">
         <option selected :value="null">Aucun type 1</option>
         <option v-for="option in tags" :key="option.value" :value="option.value">{{ option.name }}</option>
       </select>
@@ -122,11 +122,11 @@ export default {
 
 <style scoped lang="css">
 .filter {
-  margin: 10px auto;
+  margin: 13px auto;
 }
 .iconFilter,
 input,
-select {
+.tag1 {
   margin-right: 10px;
 }
 </style>

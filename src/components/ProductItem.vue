@@ -3,11 +3,11 @@
     <td v-if="imgHeight > 0" :rowspan="nbRow"><img :src="itemThumbUrl" :height="imgHeight" :style="colThumbStyle" /></td>
     <td :rowspan="nbRow" class="itemName">{{ item.detail.fr.item_name }}</td>
     <td :rowspan="nbRow" class="itemName" v-if="showEnglish">{{ item.detail.en.item_name }}</td>
-    <td v-if="isRanked">{{ isReallyRanked ? item.stats[0].rank : "?" }}</td>
-    <td>{{ getMedianPriceOfDay(item.stats[0], 90) }}</td>
-    <td>{{ getMedianPriceOfDay(item.stats[0], 60) }}</td>
-    <td>{{ getMedianPriceOfDay(item.stats[0], 30) }}</td>
-    <td>{{ getMedianPriceOfDay(item.stats[0], 0) }}</td>
+    <td v-if="isRanked" class="rank">{{ isReallyRanked ? item.stats[0].rank : "?" }}</td>
+    <td class="price">{{ getMedianPriceOfDay(item.stats[0], 90) }}</td>
+    <td class="price">{{ getMedianPriceOfDay(item.stats[0], 60) }}</td>
+    <td class="price">{{ getMedianPriceOfDay(item.stats[0], 30) }}</td>
+    <td class="price">{{ getMedianPriceOfDay(item.stats[0], 0) }}</td>
   </tr>
   <template v-for="(s, i) in item.stats" :key="i">
     <tr v-if="i > 0 && showItem">
@@ -38,7 +38,7 @@ export default {
       return this.item.stats.length == 0 ? 1 : this.item.stats.length;
     },
     colThumbStyle() {
-      return "max-width:" + this.imgHeight * 3 + "px";
+      return "max-width:" + Math.min(131, this.imgHeight * 3) + "px";
     },
     hasStats() {
       return this.item.stats.length > 0;
@@ -61,7 +61,16 @@ export default {
 </script>
 
 <style scoped lang="css">
+td {
+  border: none;
+  margin: 0;
+  padding: 1px 0px;
+}
 td.itemName {
-  max-width: 200px;
+  max-width: 185px;
+}
+td.rank,
+td.price {
+  width: 55px;
 }
 </style>

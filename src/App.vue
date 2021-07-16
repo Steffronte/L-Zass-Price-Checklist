@@ -1,12 +1,13 @@
 <template>
   <h1>L-Zass price checklist</h1>
-  <p>
+  <h2 class="betaInfo">Beta : outil en cours de développement, des bugs peuvent apparaître</h2>
+  <p class="info">
     Price checklist permet de connaitre rapidement l'état du marché sur Warframe. Il propose des listes d'items mises à jour automatiquement et triable. Dans
     warframe, les prix oscillent souvent à cause du Prime Vault, de Baro et des events.
   </p>
   <button :class="{ isSelected: selectedList == WARFRAMES }" @click="selectedList = WARFRAMES">Warframes</button>
   <button :class="{ isSelected: selectedList == WEAPONS }" @click="selectedList = WEAPONS">Armes</button>
-  <button :class="{ isSelected: selectedList == PRIME_SETS }" @click="selectedList = PRIME_SETS">Autres set prime</button>
+  <button :class="{ isSelected: selectedList == PRIME_SETS }" @click="selectedList = PRIME_SETS">Vrac prime</button>
   <button :class="{ isSelected: selectedList == RELICS }" @click="selectedList = RELICS">Reliques</button>
   <button :class="{ isSelected: selectedList == MODS }" @click="selectedList = MODS">Mods</button>
   <button :class="{ isSelected: selectedList == ARCANES }" @click="selectedList = ARCANES">Arcanes</button>
@@ -22,16 +23,15 @@
     <ProductList :itemList="gemsList" v-on="handlers" v-show="selectedList == GEMS" :listName="GEMS" />
     <ProductList :itemList="fishList" v-on="handlers" v-show="selectedList == FISH" :listName="FISH" />
   </template>
-  <p class="loadingMessage" v-else><Spinner fill="blue" height="30px" dur="1.0s" /> Récupération des données en cours, veuillez patienter...</p>
+  <p class="loadingMessage" v-else><Spinner fill="blue" height="20px" dur="1.0s" /> Récupération des données en cours, veuillez patienter...</p>
   <footer>
-    Toutes les données proviennent de <a href="https://warframe.market">Warframe Market</a>. La mise à jour des données aura lieu dans la nuit lorsqu'elle sera
-    sera automatisée. Dernière mise à jour le {{ lastUpdate }}.
-    <br />
+    Toutes les données proviennent de <a href="https://warframe.market">Warframe Market</a> et y sont récupérées une fois par jour.<br />
+    Dernière mise à jour le {{ lastUpdate }}.<br />
     Digital Extremes Ltd, Warframe and the logo Warframe are registered trademarks. All rights are reserved worldwide. This site has no official link with
     Digital Extremes Ltd or Warframe. All artwork, screenshots, characters or other recognizable features of the intellectual property relating to these
     trademarks are likewise the intellectual property of Digital Extremes Ltd.
     <br />
-    Créé par Steffronté
+    Créé par <a href="mailto:stefan.eu2@gmail.com?subject=L-Zass price checklist">Steffronté</a>
   </footer>
 </template>
 
@@ -172,10 +172,11 @@ export default {
 }
 
 #app > button {
-  margin: 3px;
+  margin: 1px;
   border: none;
-  padding: 15px 30px;
-  font-size: 16px;
+  padding: 7px 0px;
+  width: 95px;
+  font-size: 15px;
   color: white;
   background-color: #538bc1;
 }
@@ -192,10 +193,21 @@ footer {
 }
 
 body {
-  margin: 0;
+  margin: 0 auto;
+  width: 776px;
+}
+
+.info {
+  font-size: 14px;
+  font-style: italic;
+}
+
+h2.betaInfo {
+  font-size: 1.2em;
+  color: red;
 }
 
 .loadingMessage {
-  font-size: 30px;
+  font-size: 20px;
 }
 </style>

@@ -75,8 +75,10 @@ h1 {
   font-style: italic;
 }
 .tableList {
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  padding: 0;
+  border: none;
+  border-spacing: 0px;
 }
 .tableList th span {
   cursor: pointer;
