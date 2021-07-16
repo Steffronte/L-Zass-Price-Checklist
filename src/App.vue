@@ -22,7 +22,7 @@
     <ProductList :itemList="gemsList" v-on="handlers" v-show="selectedList == GEMS" :listName="GEMS" />
     <ProductList :itemList="fishList" v-on="handlers" v-show="selectedList == FISH" :listName="FISH" />
   </template>
-  <p v-else><Spinner fill="blue" height="30px" dur="1.0s" /> Récupération en cours...</p>
+  <p class="loadingMessage" v-else><Spinner fill="blue" height="30px" dur="1.0s" /> Récupération des données en cours, veuillez patienter...</p>
   <footer>
     Toutes les données proviennent de <a href="https://warframe.market">Warframe Market</a>. La mise à jour des données aura lieu dans la nuit lorsqu'elle sera
     sera automatisée. Dernière mise à jour le {{ lastUpdate }}.
@@ -79,6 +79,7 @@ export default {
     sort(type, isAsc) {
       let list = this.getSelectedList();
       let f;
+      let findMedian = (i, stat) => (i.stats.length == 0 ? -1 : i.stats[0][stat].median);
       switch (type) {
         case this.FR_NAME:
           f = (a, b) => a.detail.fr.item_name.localeCompare(b.detail.fr.item_name);
@@ -87,16 +88,16 @@ export default {
           f = (a, b) => a.detail.en.item_name.localeCompare(b.detail.en.item_name);
           break;
         case this.MED_0:
-          f = (a, b) => a.stats[0].stat0.median - b.stats[0].stat0.median;
+          f = (a, b) => findMedian(a, "stat0") - findMedian(b, "stat0");
           break;
         case this.MED_30:
-          f = (a, b) => a.stats[0].stat30.median - b.stats[0].stat30.median;
+          f = (a, b) => findMedian(a, "stat30") - findMedian(b, "stat30");
           break;
         case this.MED_60:
-          f = (a, b) => a.stats[0].stat60.median - b.stats[0].stat60.median;
+          f = (a, b) => findMedian(a, "stat60") - findMedian(b, "stat60");
           break;
         case this.MED_90:
-          f = (a, b) => a.stats[0].stat90.median - b.stats[0].stat90.median;
+          f = (a, b) => findMedian(a, "stat90") - findMedian(b, "stat90");
           break;
       }
       list.sort(f);
@@ -192,5 +193,9 @@ footer {
 
 body {
   margin: 0;
+}
+
+.loadingMessage {
+  font-size: 30px;
 }
 </style>

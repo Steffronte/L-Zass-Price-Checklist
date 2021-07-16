@@ -45,11 +45,12 @@
 import ProductItem from "./ProductItem.vue";
 import Filter from "./Filter.vue";
 import SortConstantMixin from "@/mixins/SortConstantMixin.js";
+import ListNameMixin from "@/mixins/ListNameMixin.js";
 
 export default {
   components: { ProductItem, Filter },
   name: "ProductList",
-  mixins: [SortConstantMixin],
+  mixins: [SortConstantMixin, ListNameMixin],
   props: {
     itemList: Array,
     listName: String,
@@ -63,7 +64,7 @@ export default {
   },
   computed: {
     isRanked() {
-      return this.itemList ? this.itemList[0].stats[0].rank != undefined : false;
+      return [this.RELICS, this.MODS, this.ARCANES, this.FISH].includes(this.listName);
     },
   },
 };
