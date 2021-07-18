@@ -10,19 +10,10 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compiles and minifies for production. 
+#### /!\MUST be run from a UNIX environnment (git bash is OK for windows)
 ```
 npm run build
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Run your end-to-end tests
-```
-npm run test:e2e
 ```
 
 ### Lints and fixes files

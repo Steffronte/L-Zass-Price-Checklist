@@ -13,7 +13,7 @@
         <span class="infobulle" :aria-label="item.detail.en.description">{{ item.detail.en.item_name }}</span>
       </a>
     </td>
-    <td v-if="isDucat" class="ducat">{{ getDucat }}</td>
+    <td v-if="isDucat" :rowspan="nbRow" class="ducat">{{ getDucat }}</td>
     <td v-if="isRanked" class="rank">{{ isReallyRanked ? item.stats[0].rank : "?" }}</td>
     <td class="price">
       <span class="infobulle" :aria-label="getMessageOfDay(item.stats[0], 90)">{{ getMedianPriceOfDay(item.stats[0], 90) }}</span>
@@ -105,6 +105,7 @@ td.itemName {
   max-width: 185px;
 }
 td.rank,
+td.ducat,
 td.price {
   width: 55px;
 }

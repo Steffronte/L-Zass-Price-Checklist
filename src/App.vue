@@ -24,6 +24,7 @@
     <ProductList :itemList="fishList" v-on="handlers" v-show="selectedList == FISH" :listName="FISH" />
   </template>
   <p class="loadingMessage" v-else><Spinner fill="blue" height="20px" dur="1.0s" /> Récupération des données en cours, veuillez patienter...</p>
+  <p class="errorMessage" v-if="isErrored">⚠Erreur lors de la récupération des données : {{ errorMessage }}</p>
   <footer>
     Toutes les données proviennent de <a href="https://warframe.market">Warframe Market</a> et y sont récupérées une fois par jour.<br />
     Dernière mise à jour le {{ lastUpdate }}.<br />
@@ -47,7 +48,6 @@ export default {
   mixins: [SortConstantMixin, ListNameMixin],
   data() {
     return {
-      isLoading: true,
       selectedList: null,
       lastUpdate: "?",
       frameList: [],
@@ -62,6 +62,9 @@ export default {
         sort: this.sort,
         filters: this.filters,
       },
+      isLoading: true,
+      isErrored: false,
+      errorMessage: null,
     };
   },
   methods: {
@@ -160,6 +163,8 @@ export default {
       .then((response) => this.loadItems(response.data))
       .catch((error) => {
         console.error(error);
+        this.errorMessage = error.message;
+        this.isErrored = true;
       })
       .finally(() => (this.isLoading = false));
   },
@@ -211,7 +216,13 @@ h2.betaInfo {
   color: red;
 }
 
-.loadingMessage {
+.loadingMessage,
+.errorMessage {
   font-size: 20px;
+}
+
+.errorMessage {
+  color: red;
+  font-weight: bold;
 }
 </style>
