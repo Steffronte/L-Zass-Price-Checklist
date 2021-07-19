@@ -3,6 +3,7 @@
     <IconFilter class="iconFilter" fill="black" />
     <input placeholder="Nom FR" type="text" v-model="nameFr" />
     <input placeholder="Nom EN" type="text" v-model="nameEn" v-if="hasEnName" />
+    <input placeholder="Description" type="text" v-model="description" />
     <template v-if="tags.length > 0">
       <select v-model="tag1" class="tag1">
         <option selected :value="null">Aucun type 1</option>
@@ -34,6 +35,7 @@ export default {
       nameEn: null,
       tag1: null,
       tag2: null,
+      description: null,
       weaponsTags: [
         { name: "Arbalète", value: "crossbow" },
         { name: "Archwing", value: "archwing" },
@@ -91,6 +93,7 @@ export default {
         nameEn: this.nameEn,
         tag1: this.tag1,
         tag2: this.tag2,
+        description: this.description,
       };
     },
     tags() {
@@ -127,6 +130,9 @@ export default {
 .iconFilter,
 input,
 .tag1 {
-  margin-right: 10px;
+  margin-right: 5px;
+}
+input {
+  max-width: 140px;
 }
 </style>

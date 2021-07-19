@@ -20,7 +20,7 @@
     <ProductList :imgHeight="48" :itemList="relicsList" v-on="handlers" v-show="selectedList == RELICS" :listName="RELICS" />
     <ProductList :imgHeight="48" :showEnglish="true" :itemList="arcaneList" v-on="handlers" v-show="selectedList == ARCANES" :listName="ARCANES" />
     <ProductList :imgHeight="128" :showEnglish="true" :itemList="modsList" v-on="handlers" v-show="selectedList == MODS" :listName="MODS" />
-    <ProductList :itemList="gemsList" v-on="handlers" v-show="selectedList == GEMS" :listName="GEMS" />
+    <ProductList :showEnglish="true" :itemList="gemsList" v-on="handlers" v-show="selectedList == GEMS" :listName="GEMS" />
     <ProductList :itemList="fishList" v-on="handlers" v-show="selectedList == FISH" :listName="FISH" />
   </template>
   <p class="loadingMessage" v-else><Spinner fill="blue" height="20px" dur="1.0s" /> Récupération des données en cours, veuillez patienter...</p>
@@ -112,6 +112,7 @@ export default {
     },
     filters(data) {
       const list = this.getSelectedList();
+      console.log(data);
       const normalizeName = (name) => name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
       list.forEach((item, index) => {
         let hide = false;
@@ -119,6 +120,7 @@ export default {
         if (data.tag2 && !hide) hide = !item.detail.tags.includes(data.tag2);
         if (data.nameFr && !hide) hide = !normalizeName(item.detail.fr.item_name).includes(normalizeName(data.nameFr));
         if (data.nameEn && !hide) hide = !normalizeName(item.detail.en.item_name).includes(normalizeName(data.nameEn));
+        if (data.description && !hide) hide = !normalizeName(item.detail.fr.description + item.detail.en.description).includes(normalizeName(data.description));
         list[index].hide = hide;
       });
     },
