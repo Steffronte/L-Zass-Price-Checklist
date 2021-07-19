@@ -17,10 +17,10 @@
     <ProductList :itemList="frameList" v-on="handlers" v-show="selectedList == WARFRAMES" :listName="WARFRAMES" />
     <ProductList :itemList="weaponsList" v-on="handlers" v-show="selectedList == WEAPONS" :listName="WEAPONS" />
     <ProductList :itemList="primeSetList" v-on="handlers" v-show="selectedList == PRIME_SETS" :listName="PRIME_SETS" />
-    <ProductList :imgHeight="48" :itemList="relicsList" v-on="handlers" v-show="selectedList == RELICS" :listName="RELICS" />
-    <ProductList :imgHeight="48" :showEnglish="true" :itemList="arcaneList" v-on="handlers" v-show="selectedList == ARCANES" :listName="ARCANES" />
-    <ProductList :imgHeight="128" :showEnglish="true" :itemList="modsList" v-on="handlers" v-show="selectedList == MODS" :listName="MODS" />
-    <ProductList :showEnglish="true" :itemList="gemsList" v-on="handlers" v-show="selectedList == GEMS" :listName="GEMS" />
+    <ProductList :itemList="relicsList" v-on="handlers" v-show="selectedList == RELICS" :listName="RELICS" :imgHeight="48" />
+    <ProductList :itemList="arcaneList" v-on="handlers" v-show="selectedList == ARCANES" :listName="ARCANES" :imgHeight="48" />
+    <ProductList :itemList="modsList" v-on="handlers" v-show="selectedList == MODS" :listName="MODS" :imgHeight="128" />
+    <ProductList :itemList="gemsList" v-on="handlers" v-show="selectedList == GEMS" :listName="GEMS" />
     <ProductList :itemList="fishList" v-on="handlers" v-show="selectedList == FISH" :listName="FISH" />
   </template>
   <p class="loadingMessage" v-else><Spinner fill="blue" height="20px" dur="1.0s" /> Récupération des données en cours, veuillez patienter...</p>

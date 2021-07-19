@@ -67,7 +67,6 @@ export default {
   props: {
     itemList: Array,
     listName: String,
-    showEnglish: { type: Boolean, default: false },
     imgHeight: { type: Number, default: 32 },
   },
   methods: {
@@ -81,6 +80,9 @@ export default {
     },
     isDucat() {
       return [this.WARFRAMES, this.WEAPONS, this.PRIME_SETS].includes(this.listName);
+    },
+    showEnglish() {
+      return [this.MODS, this.ARCANES, this.GEMS].includes(this.listName);
     },
   },
 };
