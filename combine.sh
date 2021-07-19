@@ -8,3 +8,4 @@ echo "<script>" >> $FILENAME
 cat dist/js/*.js >> $FILENAME
 echo "</script>" >> $FILENAME
 sed -i 's/^\/\/# sourceMappingURL=.*\.js\.map//g' $FILENAME #retrait commentaire
+rm -rf dist/css dist/js dist/favicon.ico dist/index.html

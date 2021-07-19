@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "postbuild": "sh combine.sh",
+    "build2": "vue-cli-service build",
+    "postbuild2": "sh combine.sh",
     "start": "npm run serve",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
