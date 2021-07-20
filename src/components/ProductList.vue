@@ -15,7 +15,7 @@
           <span @click="sort(EN_NAME, false)">↑</span>
         </th>
         <th v-if="isDucat">
-          Ducat
+          <Ducat />
           <span @click="sort(DUCAT, true)">↓</span>
           <span @click="sort(DUCAT, false)">↑</span>
         </th>
@@ -57,11 +57,12 @@
 <script>
 import ProductItem from "./ProductItem.vue";
 import Filter from "./Filter.vue";
+import Ducat from "./IconDucat.vue";
 import SortConstantMixin from "@/mixins/SortConstantMixin.js";
 import ListNameMixin from "@/mixins/ListNameMixin.js";
 
 export default {
-  components: { ProductItem, Filter },
+  components: { ProductItem, Filter, Ducat },
   name: "ProductList",
   mixins: [SortConstantMixin, ListNameMixin],
   props: {

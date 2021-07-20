@@ -116,11 +116,13 @@ export default {
       const normalizeName = (name) => name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
       list.forEach((item, index) => {
         let hide = false;
+        const normalizedDesc = normalizeName(item.detail.fr.description + item.detail.en.description);
         if (data.tag1 && !hide) hide = !item.detail.tags.includes(data.tag1);
         if (data.tag2 && !hide) hide = !item.detail.tags.includes(data.tag2);
         if (data.nameFr && !hide) hide = !normalizeName(item.detail.fr.item_name).includes(normalizeName(data.nameFr));
         if (data.nameEn && !hide) hide = !normalizeName(item.detail.en.item_name).includes(normalizeName(data.nameEn));
-        if (data.description && !hide) hide = !normalizeName(item.detail.fr.description + item.detail.en.description).includes(normalizeName(data.description));
+        if (data.description && !hide) hide = !normalizedDesc.includes(normalizeName(data.description));
+        if (data.description2 && !hide) hide = !normalizedDesc.includes(normalizeName(data.description2));
         list[index].hide = hide;
       });
     },

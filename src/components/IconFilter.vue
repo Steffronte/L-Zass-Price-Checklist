@@ -1,5 +1,6 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 30 360 375" :height="height">
+  <svg viewBox="0 30 360 375" :height="height">
+    <title>Filtre</title>
     <path
       :fill="fill"
       d="M355.265,85.536V40.606c-0.552-5.854-5.622-10.233-11.494-9.927H11.494c-5.741-0.583-10.868,3.599-11.451,9.34
@@ -16,7 +17,7 @@
 export default {
   name: "IconFilter",
   props: {
-    fill: { type: String, default: "black" },
+    fill: { type: String, default: "#2c3e50" },
     height: { type: String, default: "20px" },
   },
 };
