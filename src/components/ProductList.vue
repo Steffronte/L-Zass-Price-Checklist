@@ -3,42 +3,39 @@
     <Filter :listName="listName" :hasEnName="showEnglish" />
     <table class="tableList">
       <tr>
-        <th v-if="imgHeight > 0">Image</th>
+        <th v-if="imgHeight > 0">
+          <Infobulle message="Accès au wiki EN au clic">Image</Infobulle>
+        </th>
         <th>
-          Nom FR
-          <span @click="sort(FR_NAME, true)">↓</span>
-          <span @click="sort(FR_NAME, false)">↑</span>
+          <Infobulle message="Description française au survol, wiki FR au clic">Nom FR</Infobulle>
+          <Sort :column="FR_NAME" />
         </th>
         <th v-if="showEnglish">
-          Nom EN
-          <span @click="sort(EN_NAME, true)">↓</span>
-          <span @click="sort(EN_NAME, false)">↑</span>
+          <Infobulle message="Description anglaise au survol, wiki EN au clic">Nom EN</Infobulle>
+          <Sort :column="EN_NAME" />
         </th>
         <th v-if="isDucat">
-          <Ducat />
-          <span @click="sort(DUCAT, true)">↓</span>
-          <span @click="sort(DUCAT, false)">↑</span>
+          <Infobulle message="Valeur du set en ducats"><Ducat /></Infobulle>
+          <Sort :column="DUCAT" />
         </th>
-        <th v-if="isRanked">Rang</th>
-        <th>
-          J-90
-          <span @click="sort(MED_90, true)">↓</span>
-          <span @click="sort(MED_90, false)">↑</span>
+        <th v-if="isRanked">
+          <Infobulle message="Niveau de l'objet. Seul les prix du premier rang sont utilisés par les tris.">Rang</Infobulle>
         </th>
-        <th>
-          J-60
-          <span @click="sort(MED_60, true)">↓</span>
-          <span @click="sort(MED_60, false)">↑</span>
+        <th class="infobulle">
+          <Infobulle message="Prix médian le plus ancien disponible">J-90</Infobulle>
+          <Sort :column="MED_90" />
         </th>
         <th>
-          J-30
-          <span @click="sort(MED_30, true)">↓</span>
-          <span @click="sort(MED_30, false)">↑</span>
+          <Infobulle :message="priceColumnInfo(60)">J-60</Infobulle>
+          <Sort :column="MED_60" />
         </th>
         <th>
-          J-1
-          <span @click="sort(MED_0, true)">↓</span>
-          <span @click="sort(MED_0, false)">↑</span>
+          <Infobulle :message="priceColumnInfo(30)">J-30</Infobulle>
+          <Sort :column="MED_30" />
+        </th>
+        <th>
+          <Infobulle message="Prix médian le plus récent disponible">J-1</Infobulle>
+          <Sort :column="MED_0" />
         </th>
       </tr>
       <ProductItem
@@ -60,9 +57,11 @@ import Filter from "./Filter.vue";
 import Ducat from "./IconDucat.vue";
 import SortConstantMixin from "@/mixins/SortConstantMixin.js";
 import ListNameMixin from "@/mixins/ListNameMixin.js";
+import Infobulle from "./Infobulle.vue";
+import Sort from "./Sort.vue";
 
 export default {
-  components: { ProductItem, Filter, Ducat },
+  components: { ProductItem, Filter, Ducat, Infobulle, Sort },
   name: "ProductList",
   mixins: [SortConstantMixin, ListNameMixin],
   props: {
@@ -71,8 +70,8 @@ export default {
     imgHeight: { type: Number, default: 32 },
   },
   methods: {
-    sort(type, isAsc) {
-      this.$emit("sort", type, isAsc);
+    priceColumnInfo(day) {
+      return "Prix médians il y a " + day + " jours si disponible, sinon moyenne pondérée des jours le plus proche disponible avant et après.";
     },
   },
   computed: {
@@ -98,8 +97,5 @@ h1 {
   padding: 0;
   border: none;
   border-spacing: 0px;
-}
-.tableList th span {
-  cursor: pointer;
 }
 </style>

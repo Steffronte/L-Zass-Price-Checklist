@@ -2,8 +2,8 @@
   <h1>L-Zass price checklist</h1>
   <h2 class="betaInfo">Beta : outil en cours de développement, des bugs peuvent apparaître</h2>
   <p class="info">
-    Price checklist permet de connaitre rapidement l'état du marché sur Warframe. Il propose des listes d'items mises à jour quotidiennement et triables. Des
-    informations supplémentaires sont disponibles au survol, et les wiki FR et EN sont accessibles au clic sur l'image ou les noms.
+    Price checklist permet de connaitre rapidement l'état du marché sur Warframe. Il propose des listes d'items mises à jour quotidiennement filtrables et
+    triables. Des informations supplémentaires sont disponibles au survol.
   </p>
   <button :class="{ isSelected: selectedList == WARFRAMES }" @click="selectedList = WARFRAMES">Warframes</button>
   <button :class="{ isSelected: selectedList == WEAPONS }" @click="selectedList = WEAPONS">Armes</button>

@@ -1,55 +1,70 @@
 <template>
   <tr v-if="showItem">
     <td v-if="imgHeight > 0" :rowspan="nbRow">
-      <a :href="item.detail.en.wiki_link"><img :src="itemThumbUrl" :height="imgHeight" :style="colThumbStyle" /></a>
+      <a :href="item.detail.en.wiki_link">
+        <Infobulle message="Lien vers la page wiki EN">
+          <img :src="itemThumbUrl" :height="imgHeight" :style="colThumbStyle" />
+        </Infobulle>
+      </a>
     </td>
     <td :rowspan="nbRow" class="itemName">
       <a :href="item.detail.fr.wiki_link">
-        <span class="infobulle" :aria-label="item.detail.fr.description">{{ item.detail.fr.item_name }}</span>
+        <Infobulle :message="item.detail.fr.description">{{ item.detail.fr.item_name }}</Infobulle>
       </a>
     </td>
-    <td :rowspan="nbRow" class="itemName" v-if="showEnglish">
+    <td v-if="showEnglish" :rowspan="nbRow" class="itemName">
       <a :href="item.detail.en.wiki_link">
-        <span class="infobulle" :aria-label="item.detail.en.description">{{ item.detail.en.item_name }}</span>
+        <Infobulle :message="item.detail.en.description">{{ item.detail.en.item_name }}</Infobulle>
       </a>
     </td>
-    <td v-if="isDucat" :rowspan="nbRow" class="ducat">{{ getDucat }}</td>
-    <td v-if="isRanked" class="rank">{{ isReallyRanked ? item.stats[0].rank : "?" }}</td>
-    <td class="price">
-      <span class="infobulle" :aria-label="getMessageOfDay(item.stats[0], 90)">{{ getMedianPriceOfDay(item.stats[0], 90) }}</span>
+    <td v-if="isDucat" :rowspan="nbRow" class="ducat">
+      <Infobulle message="Valeur du set en ducats">{{ getDucat }}</Infobulle>
+    </td>
+    <td v-if="isRanked" class="rank">
+      <Infobulle message="Niveau de l'objet. Ce rang est le premier et le seul utilisé dans le tri par prix.">
+        {{ isReallyRanked ? item.stats[0].rank : "?" }}
+      </Infobulle>
     </td>
     <td class="price">
-      <span class="infobulle" :aria-label="getMessageOfDay(item.stats[0], 60)">{{ getMedianPriceOfDay(item.stats[0], 60) }}</span>
+      <Infobulle :message="getMessageOfDay(item.stats[0], 90)">{{ getMedianPriceOfDay(item.stats[0], 90) }}</Infobulle>
     </td>
     <td class="price">
-      <span class="infobulle" :aria-label="getMessageOfDay(item.stats[0], 30)">{{ getMedianPriceOfDay(item.stats[0], 30) }}</span>
+      <Infobulle :message="getMessageOfDay(item.stats[0], 60)">{{ getMedianPriceOfDay(item.stats[0], 60) }}</Infobulle>
     </td>
     <td class="price">
-      <span class="infobulle" :aria-label="getMessageOfDay(item.stats[0], 0)">{{ getMedianPriceOfDay(item.stats[0], 0) }}</span>
+      <Infobulle :message="getMessageOfDay(item.stats[0], 30)">{{ getMedianPriceOfDay(item.stats[0], 30) }}</Infobulle>
+    </td>
+    <td class="price">
+      <Infobulle :message="getMessageOfDay(item.stats[0], 0)">{{ getMedianPriceOfDay(item.stats[0], 0) }}</Infobulle>
     </td>
   </tr>
   <template v-for="(s, i) in item.stats" :key="i">
     <tr v-if="i > 0 && showItem">
-      <td v-if="isRanked">{{ s.rank }}</td>
-      <td>
-        <span class="infobulle" :aria-label="getMessageOfDay(s, 90)">{{ getMedianPriceOfDay(s, 90) }}</span>
+      <td v-if="isRanked">
+        <Infobulle message="Niveau de l'objet. Ce rang n'est pas le premier et n'est pas utilisé dans le tri par prix.">{{ s.rank }}</Infobulle>
       </td>
       <td>
-        <span class="infobulle" :aria-label="getMessageOfDay(s, 60)">{{ getMedianPriceOfDay(s, 60) }}</span>
+        <Infobulle :message="getMessageOfDay(s, 90)">{{ getMedianPriceOfDay(s, 90) }}</Infobulle>
       </td>
       <td>
-        <span class="infobulle" :aria-label="getMessageOfDay(s, 30)">{{ getMedianPriceOfDay(s, 30) }}</span>
+        <Infobulle :message="getMessageOfDay(s, 60)">{{ getMedianPriceOfDay(s, 60) }}</Infobulle>
       </td>
       <td>
-        <span class="infobulle" :aria-label="getMessageOfDay(s, 0)">{{ getMedianPriceOfDay(s, 0) }}</span>
+        <Infobulle :message="getMessageOfDay(s, 30)">{{ getMedianPriceOfDay(s, 30) }}</Infobulle>
+      </td>
+      <td>
+        <Infobulle :message="getMessageOfDay(s, 0)">{{ getMedianPriceOfDay(s, 0) }}</Infobulle>
       </td>
     </tr>
   </template>
 </template>
 
 <script>
+import Infobulle from "./Infobulle.vue";
+
 export default {
   name: "ProductItem",
+  components: { Infobulle },
   props: {
     itemName: String,
     item: Object,
@@ -89,7 +104,7 @@ export default {
     },
     getMessageOfDay(s, day) {
       if (!this.hasStats) return "Aucune stats pour cet item";
-      return s["stat" + day].message;
+      return s["stat" + day].message + " (" + s["stat" + day].volume + " vendu)";
     },
   },
 };
@@ -115,33 +130,5 @@ a {
 }
 a > .infobulle {
   cursor: pointer;
-}
-.infobulle {
-  position: relative;
-  cursor: help;
-}
-.infobulle:hover::after,
-.infobulle:focus::after {
-  content: attr(aria-label);
-  position: absolute;
-  top: -2.4em;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  white-space: nowrap;
-  color: white;
-  background-color: #413219;
-  padding: 4px;
-  border-radius: 7px;
-}
-[aria-label]:hover:before,
-[aria-label]:focus:before {
-  content: "▼";
-  position: absolute;
-  top: -1em;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 20px;
-  color: #413219;
 }
 </style>

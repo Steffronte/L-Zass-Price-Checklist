@@ -1,19 +1,27 @@
 <template>
   <div class="filter">
-    <IconFilter class="iconFilter" fill="black" />
-    <input placeholder="Nom FR" type="text" v-model="nameFr" />
-    <input placeholder="Nom EN" type="text" v-model="nameEn" v-if="hasEnName" />
-    <input placeholder="Description" type="text" v-model="description" v-if="showDesc" />
-    <input placeholder="Description2" type="text" v-model="description2" v-if="showDesc2" />
+    <Infobulle message="Section contenant les filtres"><IconFilter class="iconFilter" fill="black" /></Infobulle>
+    <Infobulle message="Ce que le nom FR devra contenir"><input placeholder="Nom FR" type="text" v-model="nameFr" /></Infobulle>
+    <Infobulle message="Ce que le nom EN devra contenir" v-if="hasEnName"><input placeholder="Nom EN" type="text" v-model="nameEn" /></Infobulle>
+    <Infobulle message="Ce que la description EN ou FR devra contenir" v-if="showDesc">
+      <input placeholder="Description" type="text" v-model="description" />
+    </Infobulle>
+    <Infobulle message="Ce que la description EN ou FR devra contenir" v-if="showDesc2">
+      <input placeholder="Description2" type="text" v-model="description2" />
+    </Infobulle>
     <template v-if="tags.length > 0">
-      <select v-model="tag1" class="tag1">
-        <option selected :value="null">Aucun type 1</option>
-        <option v-for="option in tags" :key="option.value" :value="option.value">{{ option.name }}</option>
-      </select>
-      <select v-model="tag2" v-if="listName != RELICS">
-        <option selected :value="null">Aucun type 2</option>
-        <option v-for="option in tags" :key="option.value" :value="option.value">{{ option.name }}</option>
-      </select>
+      <Infobulle message="Catégorie à laquelle l'objet doit appartenir">
+        <select v-model="tag1" class="tag1">
+          <option selected :value="null">Aucun type 1</option>
+          <option v-for="option in tags" :key="option.value" :value="option.value">{{ option.name }}</option>
+        </select>
+      </Infobulle>
+      <Infobulle message="2ème catégorie à laquelle l'objet doit appartenir">
+        <select v-model="tag2" v-if="listName != RELICS">
+          <option selected :value="null">Aucun type 2</option>
+          <option v-for="option in tags" :key="option.value" :value="option.value">{{ option.name }}</option>
+        </select>
+      </Infobulle>
     </template>
   </div>
 </template>
@@ -21,10 +29,11 @@
 <script>
 import ListNameMixin from "@/mixins/ListNameMixin.js";
 import IconFilter from "./IconFilter.vue";
+import Infobulle from "./Infobulle.vue";
 
 export default {
   name: "Filter",
-  components: { IconFilter },
+  components: { IconFilter, Infobulle },
   mixins: [ListNameMixin],
   props: {
     listName: String,
