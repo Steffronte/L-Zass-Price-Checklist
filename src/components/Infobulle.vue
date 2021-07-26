@@ -26,7 +26,7 @@ export default {
   top: -2.4em;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1;
+  z-index: 100;
   white-space: nowrap;
   color: white;
   background-color: #413219;
@@ -43,5 +43,6 @@ export default {
   transform: translateX(-50%);
   font-size: 20px;
   color: #413219;
+  z-index: 100;
 }
 </style>

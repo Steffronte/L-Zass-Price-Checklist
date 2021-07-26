@@ -100,3 +100,9 @@ h1 {
   width: auto;
 }
 </style>
+<style>
+.tableList td,
+.tableList th {
+  text-align: center;
+}
+</style>

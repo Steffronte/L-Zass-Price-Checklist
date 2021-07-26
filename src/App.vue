@@ -183,6 +183,8 @@ export default {
   color: white;
   margin: 0 auto;
   width: 776px;
+  line-height: normal;
+  vertical-align: initial;
 }
 
 #app > button {
