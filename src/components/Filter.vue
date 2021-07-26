@@ -151,6 +151,8 @@ input,
   margin-right: 5px;
 }
 input {
-  max-width: 120px;
+  max-width: 115px;
+  padding: 1px 2px;
+  border-radius: 0px;
 }
 </style>

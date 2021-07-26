@@ -184,7 +184,6 @@ export default {
   margin: 0 auto;
   width: 776px;
   line-height: normal;
-  vertical-align: initial;
 }
 
 #app > button {
@@ -195,6 +194,9 @@ export default {
   font-size: 15px;
   color: white;
   background-color: #538bc1;
+  border-radius: 0px;
+  box-shadow: none;
+  text-shadow: none;
 }
 
 #app > button.isSelected {

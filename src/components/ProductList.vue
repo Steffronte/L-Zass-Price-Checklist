@@ -104,5 +104,6 @@ h1 {
 .tableList td,
 .tableList th {
   text-align: center;
+  vertical-align: middle;
 }
 </style>
