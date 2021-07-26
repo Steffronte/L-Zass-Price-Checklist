@@ -1,5 +1,4 @@
 <template>
-  <h1>L-Zass price checklist</h1>
   <h2 class="betaInfo">Beta : outil en cours de développement, des bugs peuvent apparaître</h2>
   <p class="info">
     Price checklist permet de connaitre rapidement l'état du marché sur Warframe. Il propose des listes d'items mises à jour quotidiennement filtrables et
@@ -23,7 +22,7 @@
     <ProductList :itemList="gemsList" v-on="handlers" v-show="selectedList == GEMS" :listName="GEMS" />
     <ProductList :itemList="fishList" v-on="handlers" v-show="selectedList == FISH" :listName="FISH" />
   </template>
-  <p class="loadingMessage" v-else><Spinner fill="blue" height="20px" dur="1.0s" /> Récupération des données en cours, veuillez patienter...</p>
+  <p class="loadingMessage" v-else><Spinner fill="orange" height="20px" dur="1.0s" /> Récupération des données en cours, veuillez patienter...</p>
   <p class="errorMessage" v-if="isErrored">⚠Erreur lors de la récupération des données : {{ errorMessage }}</p>
   <footer>
     Toutes les données proviennent de <a href="https://warframe.market">Warframe Market</a> et y sont récupérées une fois par jour.<br />
@@ -181,7 +180,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: white;
+  margin: 0 auto;
+  width: 776px;
 }
 
 #app > button {
@@ -195,7 +196,7 @@ export default {
 }
 
 #app > button.isSelected {
-  color: black;
+  color: #2c3e50;
   background-color: #e3ecf5;
 }
 
@@ -203,11 +204,7 @@ footer {
   margin-top: 25px;
   padding: 8px;
   background-color: lightgray;
-}
-
-body {
-  margin: 0 auto;
-  width: 776px;
+  color: #2c3e50;
 }
 
 .info {

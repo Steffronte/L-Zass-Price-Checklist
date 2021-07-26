@@ -18,7 +18,7 @@
 export default {
   name: "IconDucat",
   props: {
-    fill: { type: String, default: "#2c3e50" },
+    fill: { type: String, default: "white" },
     height: { type: String, default: "20px" },
   },
 };

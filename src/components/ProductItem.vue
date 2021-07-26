@@ -3,7 +3,7 @@
     <td v-if="imgHeight > 0" :rowspan="nbRow">
       <a :href="item.detail.en.wiki_link">
         <Infobulle message="Lien vers la page wiki EN">
-          <img :src="itemThumbUrl" :height="imgHeight" :style="colThumbStyle" />
+          <img :src="itemThumbUrl" :style="thumbStyle" />
         </Infobulle>
       </a>
     </td>
@@ -80,8 +80,8 @@ export default {
     nbRow() {
       return this.item.stats.length == 0 ? 1 : this.item.stats.length;
     },
-    colThumbStyle() {
-      return "max-width:" + Math.min(131, this.imgHeight * 3) + "px";
+    thumbStyle() {
+      return "max-width:" + Math.min(131, this.imgHeight * 3) + "px; height:" + this.imgHeight + "px;";
     },
     hasStats() {
       return this.item.stats.length > 0;

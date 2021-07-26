@@ -1,6 +1,6 @@
 <template>
   <div class="filter">
-    <Infobulle message="Section contenant les filtres"><IconFilter class="iconFilter" fill="black" /></Infobulle>
+    <Infobulle message="Section contenant les filtres"><IconFilter class="iconFilter" /></Infobulle>
     <Infobulle message="Ce que le nom FR devra contenir"><input placeholder="Nom FR" type="text" v-model="nameFr" /></Infobulle>
     <Infobulle message="Ce que le nom EN devra contenir" v-if="hasEnName"><input placeholder="Nom EN" type="text" v-model="nameEn" /></Infobulle>
     <Infobulle message="Ce que la description EN ou FR devra contenir" v-if="showDesc">

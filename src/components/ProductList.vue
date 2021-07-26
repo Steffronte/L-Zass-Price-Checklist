@@ -97,5 +97,6 @@ h1 {
   padding: 0;
   border: none;
   border-spacing: 0px;
+  width: auto;
 }
 </style>
