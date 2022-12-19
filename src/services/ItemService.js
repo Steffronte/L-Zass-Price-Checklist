@@ -4,7 +4,7 @@ class ItemService {
   constructor() {}
 
   getAll() {
-    return axios.get("https://warframe-market-scrapper.herokuapp.com/");
+    return axios.get("https://warframe-market-scrapper.onrender.com");
   }
 }
 
